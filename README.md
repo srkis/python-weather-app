@@ -98,6 +98,14 @@ The app will be available at:
 
 ---
 
+## ☁️ Deployment
+
+- The project's GitHub repository is connected to Render.com for automatic deployment.
+- The application is live at: `https://python-app-weather-z0ad.onrender.com/`
+- When you push to the connected GitHub branch, Render will automatically build and deploy the latest changes.
+- Recommended: keep sensitive keys (like `API_KEY`) out of the repo and set them as environment variables in your Render service settings.
+
+
 ## ❗ Error Handling
 
 - If the entered city is not found, the app displays a clear error message.
