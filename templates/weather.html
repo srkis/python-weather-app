@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} Weather Conditions </title>
+    <!-- Font Awesome za ikonice -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="{{ url_for('static', filename='styles/style.css')}}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header sa formom za pretragu -->
+    <header class="weather-header">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <h1 class="text-center mb-4">{{ title }} Weather Conditions</h1>
+                    <p class="text-center mb-4">Check the current weather and forecast for the next 5 days for any city</p>
+
+                    <div class="search-container">
+                        <!-- Forma koja šalje podatke na server -->
+                        <form method="GET" action="/weather" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" name="city" class="form-control form-control-lg"
+                                       placeholder="Unesite naziv grada (npr. Beograd, Novi Sad, Niš...)"
+                                       aria-label="Grad" value="">
+                                <button type="submit" class="btn btn-search">
+                                    <i class="fas fa-search me-2"></i>Submit
+                                </button>
+                            </div>
+
+                            <div class="d-flex justify-content-center align-items-center mt-3">
+                                <span class="me-3 text-white">Units:</span>
+                                <div class="unit-toggle">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="units" id="celsius"
+                                               value="metric" checked>
+                                        <label class="form-check-label text-white" for="celsius">°C</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="units" id="fahrenheit"
+                                               value="imperial">
+                                        <label class="form-check-label text-white" for="fahrenheit">°F</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {% if error_message %}
+    <div class="alert alert-danger text-center">
+        {{ error_message }}
+    </div>
+    {% else %}
+
+    <!-- Glavni sadržaj -->
+    <main class="container">
+        <!-- Sekcija sa trenutnim vremenom -->
+        <section class="mb-5">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 col-lg-10">
+                    <div class="weather-card current-weather {{ weather_bg }}">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-start mb-4">
+                                        <div>
+                                            <h2 class="h1 mb-1">{{ title }}</h2>
+                                            <p id="date" class="mb-0"></p>
+                                            <p id="time" class="text-muted"></p>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="temp-display">{{ temp }}°C</div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="weather-details mt-4">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="detail-item">
+                                                    <div class="detail-icon">
+                                                        <i class="fas fa-wind"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="small text-muted">Wind</div>
+                                                        <div class="small text-muted">{{ wind_speed }} km/h</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="detail-item">
+                                                    <div class="detail-icon">
+                                                        <i class="fas fa-tint"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="small text-muted">Humidity</div>
+                                                        <div class="small text-muted">{{ humidity }}%</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="detail-item">
+                                                    <div class="detail-icon">
+                                                        <i class="fas fa-temperature-low"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="small text-muted">Feels Like</div>
+                                                        <div class="small text-muted">{{ feels_like }}°C</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="detail-item">
+                                                    <div class="detail-icon">
+                                                        <i class="fas fa-compress-alt"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="small text-muted">Pressure</div>
+                                                        <div class="small text-muted">{{ pressure }} hPa</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 text-center">
+                                    <div class="weather-icon-large">
+                                        <img alt="{{ condition }}" width="100px; height:100px;" src="{{ condition_icon }}">
+                                        <p class="weather-condition">{{ condition }}</p>
+                                    <!-- <i class="fas fa-sun"></i>-->
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <p class="mb-1">Sunrise: <span>{{ sunrise }}</span></p>
+                                        <p>Sunset: <span>{{ sunset }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Forecast for the next 5 days -->
+
+        <section class="mb-5">
+            <h3 class="text-center mb-4">Forecast for the next 5 days</h3>
+
+            <div class="row">
+                {% for day in forecast %}
+                <div class="col-md">
+                    <div class="forecast-card {{ day.bg }} m-2">
+                        <div class="forecast-day">{{ day.day_name }}</div>
+
+                        <div class="forecast-icon">
+                            <img src="https:{{ day.icon }}" alt="">
+                        </div>
+
+                        <div class="forecast-temp">{{ day.max }}°</div>
+                        <div class="small">Min: {{ day.min }}°</div>
+
+                        <div class="mt-2">{{ day.text }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Sekcija sa prognozom po satima -->
+
+        <section class="mb-5">
+    <h3 class="text-center mb-4">Hourly forecast for today</h3>
+    <div class="weather-card cloudy-bg">
+        <div class="card-body p-4">
+            <div class="row text-center">
+                {% for hour in hourly_forecast %}
+                <div class="col">
+                    <div class="hour-forecast">
+                        <div class="hour">{{ hour.time }}</div>
+                        <div class="forecast-icon">
+                            <img src="https:{{ hour.icon }}" alt="{{ hour.text }}">
+                        </div>
+                        <div class="forecast-temp">{{ hour.temp }}°</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+    </main>
+
+
+
+    <footer class="footer">
+        <div class="container">
+            <p>Python Weather APP &copy; 2025 | Data from <a href="https://www.weatherapi.com/" target="_blank">Weather API</a></p>
+            <p class="small">Design and Developed by <a href="https://srdjan.icodes.rocks" target="_blank">Srki Mafia</a> </p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper (samo za neke Bootstrap funkcionalnosti, ali nije neophodno) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script>
+const rawDate = "{{ weather_data['location']['localtime'] }}";
+const date = new Date(rawDate.replace(" ", "T"));
+const lang = "sr-RS";
+const formattedDate = new Intl.DateTimeFormat(
+
+  navigator.language,
+  { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+).format(date);
+
+const formattedTime = new Intl.DateTimeFormat(
+  navigator.language,
+  { hour: "numeric", minute: "numeric" }
+).format(date);
+
+document.getElementById("date").innerText = formattedDate;
+document.getElementById("time").innerText = formattedTime;
+</script>
+
+  {% endif %}
